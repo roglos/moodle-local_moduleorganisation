@@ -66,29 +66,29 @@ class moduleorganisation extends \core\task\scheduled_task {
          ***************************************/
 
         $datacourses = $DB->get_records_sql($sql);
-        print_r($datacourses);
+//        print_r($datacourses);
 
         foreach ($datacourses as $datacourse) {
-            if ($DB->get_record('course', array('idnumber' => $datacourse->course_idnumber)) ) {
+            if ($DB->get_record('course', array('idnumber' => $datacourse->course_idnumber)) && $datacourse->course_idnumber !=='' ) {
                 /* Get course record for each data course. */
                 $thiscourse = $DB->get_record('course', array('idnumber' => $datacourse->course_idnumber));
-                print_r($thiscourse);
+//                print_r($thiscourse);
                 /* Check any changes. */
-                echo '<p>'.$datacourse->category_idnumber.': ';
+//                echo '<p>'.$datacourse->category_idnumber.': ';
                 $updated = 0;
                 if ($thiscourse->fullname !== $datacourse->course_fullname) {
                     $updated++;
-                    echo $thiscourse->fullname.'-->'.$datacourse->course_fullname.': ';
+//                    echo $thiscourse->fullname.'-->'.$datacourse->course_fullname.': ';
                     $thiscourse->fullname = $datacourse->course_fullname;
                 }
                 if ($thiscourse->shortname !== $datacourse->course_shortname) {
                     $updated++;
-                    echo $thiscourse->shortname.'-->'.$datacourse->course_shortname.': ';
+//                    echo $thiscourse->shortname.'-->'.$datacourse->course_shortname.': ';
                     $thiscourse->shortname = $datacourse->course_shortname;
                 }
                 if ($thiscourse->startdate > $datacourse->course_startdate) { // Staff may bring date forward, not delay it.
                     $updated++;
-                    echo $thiscourse->startdate.'-->'.$datacourse->course_startdate.': ';
+//                    echo $thiscourse->startdate.'-->'.$datacourse->course_startdate.': ';
                     $thiscourse->startdate = $datacourse->course_startdate;
                 }
                 // Get category id for the relevant category idnumber - this is what is needed in the table.
@@ -96,11 +96,11 @@ class moduleorganisation extends \core\task\scheduled_task {
                     $category = $DB->get_record('course_categories', array('idnumber' => $datacourse->category_idnumber));
                     if ($thiscourse->category !== $category->id) {
                         $updated++;
-                        echo $thiscourse->category.'-->'.$category->id.': ';
+//                        echo $thiscourse->category.'-->'.$category->id.': ';
                         $thiscourse->category = $category->id;
                     }
                 }
-                echo 'Updated count = '.$updated.'</p>';
+//                echo 'Updated count = '.$updated.'</p>';
                 $DB->update_record('course', $thiscourse);
             }
         }
